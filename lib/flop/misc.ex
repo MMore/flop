@@ -17,6 +17,9 @@ defmodule Flop.Misc do
   """
   def split_search_text(s), do: s |> String.split() |> Enum.map(&add_wildcard/1)
 
+  def add_quotes_if_empty_array("[]", {:array, _}), do: []
+  def add_quotes_if_empty_array(value, _), do: value
+
   @doc """
   Takes a string representation of a Ecto dynamic query and a string
   representation of a binding list and returns a quoted dynamic.

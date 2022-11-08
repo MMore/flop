@@ -55,7 +55,8 @@ defmodule Flop.Operators do
         field(r, ^var!(field)) == ^var!(value)
       end
 
-    {fragment, nil, nil}
+    prelude = prelude(:add_quotes_if_empty_array)
+    {fragment, prelude, nil}
   end
 
   def op_config(:!=) do
@@ -64,7 +65,8 @@ defmodule Flop.Operators do
         field(r, ^var!(field)) != ^var!(value)
       end
 
-    {fragment, nil, nil}
+    prelude = prelude(:add_quotes_if_empty_array)
+    {fragment, prelude, nil}
   end
 
   def op_config(:>=) do
@@ -257,6 +259,15 @@ defmodule Flop.Operators do
   defp prelude(:split_search_text) do
     quote do
       var!(value) = Flop.Misc.split_search_text(var!(value))
+    end
+  end
+
+  defp prelude(:add_quotes_if_empty_array) do
+    quote do
+      var!(module) = var!(schema_struct).__struct__()
+      var!(field_type) = var!(module).__schema__(:type, var!(field))
+      var!(value) =
+        Flop.Misc.add_quotes_if_empty_array(var!(value), var!(field_type))
     end
   end
 end

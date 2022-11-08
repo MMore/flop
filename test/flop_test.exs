@@ -187,6 +187,20 @@ defmodule FlopTest do
       end
     end
 
+    property "applies equality filter to array fields" do
+      check all pet_count <- integer(@pet_count_range),
+                pets = insert_list_and_sort(pet_count, :pet_with_owner),
+                field <- member_of([:tags, :owner_tags]) do
+        expected = filter_pets(pets, field, :==, "[]")
+
+        assert query_pets_with_owners(%{
+                 filters: [%{field: field, op: :==, value: "[]"}]
+               }) == expected
+
+        checkin_checkout()
+      end
+    end
+
     property "applies equality filter to compound fields" do
       check all pet_count <- integer(@pet_count_range),
                 pets = insert_list_and_sort(pet_count, :pet_with_owner),

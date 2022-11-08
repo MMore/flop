@@ -120,7 +120,7 @@ defmodule Flop.Builder do
   for op <- @operators do
     {fragment, prelude, combinator} = op_config(op)
 
-    defp build_op(c, _schema_struct, {:normal, field}, %Filter{
+    defp build_op(c, schema_struct, {:normal, field}, %Filter{
            op: unquote(op),
            value: value
          }) do
@@ -130,7 +130,7 @@ defmodule Flop.Builder do
 
     defp build_op(
            c,
-           _schema_struct,
+           schema_struct,
            {:join, %{binding: binding, field: field}},
            %Filter{
              op: unquote(op),
